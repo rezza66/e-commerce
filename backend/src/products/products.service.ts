@@ -19,11 +19,11 @@ export class ProductsService {
   }
 
   findAll() {
-    return this.productModel.find().exec();
+    return this.productModel.find().populate('category').exec(); 
   }
 
   async findOne(id: string) {
-    const product = await this.productModel.findById(id).exec();
+    const product = await this.productModel.findById(id).populate('category').exec();
     if (!product) throw new NotFoundException('Product not found');
     return product;
   }
@@ -47,13 +47,13 @@ export class ProductsService {
 
     const updated = await this.productModel
       .findByIdAndUpdate(id, dto, { new: true })
+      .populate('category')
       .exec();
     return updated;
   }
 
   async remove(id: string) {
     const product = await this.productModel.findById(id).exec();
-
     if (!product) {
       throw new NotFoundException('Product not found');
     }
